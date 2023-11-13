@@ -1,0 +1,31 @@
+{{define "title"}}
+{{if not .ParentID}}Post #{{.ID}}{{else}}Post #{{.ID}}@#{{.ParentID}}{{end}}
+{{end}}
+{{define "scripts"}}{{end}}
+{{define "body"}}
+{{if .ParentID}}
+<div class="sixteenpx_monospace">
+  [reply to <a href="/post/{{.ParentID}}">#{{.ParentID}}</a>]
+</div>
+{{end}}
+<div class="post">
+  <p class="post_id">#{{.ID}}</p>
+  <span class="post_contents">{{.Content}}</span>
+</div>
+<!--
+<div>
+  <form action="/post/{{.ID}}" method="post">
+    <input type="hidden" name="_method" value="DELETE">
+    <button style="font: 14px monospace" type="submit">Delete</button>
+  </form>
+</div>
+-->
+{{range .ChildrenIDs}}
+<a class="reply_link" href="/post/{{.}}">>> #{{.}}</a>
+{{end}}
+<div>
+  <form class="reply-button" method="get" action="/create">
+    <button style="font: 14px monospace;" name="reply_to" id="submit" type="submit" value="{{.ID}}">reply</button>
+  </form>
+</div>
+{{end}}

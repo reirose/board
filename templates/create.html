@@ -1,0 +1,28 @@
+{{define "title"}}new post{{end}}
+{{define "scripts"}}
+<!-- this looks to good for my site lol -->
+<script src="https://cdn.tiny.cloud/1/xq1oyi6k7o2rq5hl449i9su59zlqmgg4250mfkmgtoboidmz/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    tinymce.init({
+    selector: '#mytextarea',
+    toolbar: 'undo redo | blocks | ' +
+        'bold italic backcolor | alignleft aligncenter ' +
+        'alignright alignjustify | bullist numlist outdent indent | ' +
+        'removeformat | help',
+    relative_urls : false,
+    remove_script_host : false,
+    convert_urls : true,
+});
+</script>
+{{end}}
+{{define "body"}}
+<form method="post" action="/create">
+    <textarea id="mytextarea" class="mytextarea" name="content" style="align-self: center;"></textarea><br>
+    {{if ne .ReplyTo ""}}
+    <input type="text" placeholder="reply to" name="parent_id" value="{{.ReplyTo}}"/><br>
+    {{else}}
+    <input type="text" placeholder="reply to" name="parent_id"/><br>
+    {{end}}
+    <button id="submit" type="submit" style="align-self: center;">Create</button>
+</form>
+{{end}}
