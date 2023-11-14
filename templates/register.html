@@ -1,0 +1,14 @@
+{{define "title"}}new user{{end}}
+{{define "scripts"}}{{end}}
+{{define "body"}}
+<form method="post" action="reg">
+    <input type="text" placeholder="user_id" name="user_id" readonly="true" value="{{.UserID}}"/><br>
+    <input type="password" placeholder="password" name="password"/><br>
+    {{if eq .Role ""}}
+    <input type="text" name="role" placeholder="role" readonly="true" value="user"/><br>
+    {{else}}
+    <input type="text" name="role" placeholder="role" readonly="true" value="{{.Role}}"/><br>
+    {{end}}
+    <button id="submit" type="submit" style="align-self: center;">register</button>
+</form>
+{{end}}

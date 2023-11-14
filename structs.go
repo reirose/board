@@ -16,3 +16,15 @@ type Post struct {
 type Reply struct {
 	ReplyTo string `json:"reply_to"`
 }
+
+type User struct {
+	ID 		 int 	`json:"id"`
+	Role 	 string `json:"role"`
+	UserID 	 string	`json:"user_id"`
+	Password string `json:"password"`
+}
+
+type PreRegUser struct {
+	Role   string `json:"role"`
+	UserID string `json:"user_id"`
+}

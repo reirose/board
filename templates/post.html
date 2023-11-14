@@ -12,14 +12,6 @@
   <p class="post_id">#{{.ID}}</p>
   <span class="post_contents">{{.Content}}</span>
 </div>
-<!--
-<div>
-  <form action="/post/{{.ID}}" method="post">
-    <input type="hidden" name="_method" value="DELETE">
-    <button style="font: 14px monospace" type="submit">Delete</button>
-  </form>
-</div>
--->
 {{range .ChildrenIDs}}
 <a class="reply_link" href="/post/{{.}}">>> #{{.}}</a>
 {{end}}

@@ -3,7 +3,6 @@ package main
 import (
 	"html/template"
 	"net/http"
-	"net/url"
 	"strconv"
 	"time"
 )
@@ -29,14 +28,8 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 
 func NewPost(w http.ResponseWriter, r *http.Request) {
 	log(r)
-	u, err := url.Parse(r.URL.String())
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	
-	params := u.Query()
-	reply_to := params.Get("reply_to")
+	reply_to, err := getParam(w, r.URL.String(), "reply_to")
+	catch(err)
 	reply := &Reply{ReplyTo: reply_to,}
 
 	t, _ := template.ParseFiles("templates/base.html", "templates/create.html")

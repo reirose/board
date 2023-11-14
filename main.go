@@ -35,6 +35,20 @@ func PostCtx(next http.Handler) http.Handler {
 	})
 }
 
+func UserCtx(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		userID := chi.URLParam(r, "userID")
+		user, err := dbGetUser(userID)
+		if err != nil {
+			fmt.Println(err)
+			http.Error(w, http.StatusText(404), 404)
+			return
+		}
+		ctx := context.WithValue(r.Context(), "user", user)
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
+}
+
 func ChangeMethod(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPost {
@@ -79,6 +93,20 @@ func main() {
 			r.Get("/", GetPost)
 			r.Delete("/", DeletePost)
 			r.Get("/delete", DeletePost)
+		})
+	})
+
+	// /user/ methods
+	router.Route("/user", func(r chi.Router) {
+		r.Get("/", ErrorNotFound)
+		r.Route("/{userID}", func(r chi.Router) {
+			r.Use(UserCtx)
+			r.Get("/", GetUser)
+			r.Get("/remove", RemoveUser)
+		})
+		r.Route("/reg", func(r chi.Router) {
+			r.Get("/", RegUser)
+			r.Post("/", AddUser)
 		})
 	})
 

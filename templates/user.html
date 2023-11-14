@@ -1,0 +1,10 @@
+{{define "title"}}
+User #{{.UserID}}
+{{end}}
+{{define "scripts"}}{{end}}
+{{define "body"}}
+<div class="user-info">
+  <p class="user-id">User #{{.UserID}}</p>
+  <span class="user-role">Role: {{.Role}}</span>
+</div>
+{{end}}
