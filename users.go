@@ -32,7 +32,7 @@ func RegUser(w http.ResponseWriter, r *http.Request) {
 func AddUser(w http.ResponseWriter, r *http.Request) {
 	log(r)
 	fmt.Println(r.Form)
-	user_id := r.FormValue("user_id")
+	userId := r.FormValue("user_id")
 	password, err := dbEncodeString(r.FormValue("password"))
 
 	if err != nil {
@@ -41,12 +41,12 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 
 	role := r.FormValue("role")
 
-	fmt.Println(user_id, *password, role)
+	fmt.Println(userId, *password, role)
 
 	user := &User{
-		UserID: user_id,
+		UserID:   userId,
 		Password: *password,
-		Role: role,
+		Role:     role,
 	}
 
 	catch(dbRegisterUser(user))

@@ -23,13 +23,16 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 
 	t, _ := template.ParseFiles("templates/base.html", "templates/post.html")
 	err := t.Execute(w, post)
-	catch(err)
+	if err != nil {
+		print(err)
+		http.Redirect(w, r, "/", http.StatusBadRequest)
+	}
 }
 
 func NewPost(w http.ResponseWriter, r *http.Request) {
 	log(r)
-	reply_to := getParam(r.URL.String(), "reply_to")
-	reply := &Reply{ReplyTo: reply_to,}
+	replyTo := getParam(r.URL.String(), "reply_to")
+	reply := &Reply{ReplyTo: replyTo}
 
 	t, _ := template.ParseFiles("templates/base.html", "templates/create.html")
 	err := t.Execute(w, reply)
@@ -40,18 +43,18 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 	log(r)
 	t := time.Now()
 	content := r.FormValue("content")
-	published_at := t.UTC().String()
-	parent_id := r.FormValue("parent_id")
+	publishedAt := t.UTC().String()
+	parentId := r.FormValue("parent_id")
 
-	parent_id_int, err := strconv.Atoi(parent_id)
+	parentIdInt, err := strconv.Atoi(parentId)
 	if err != nil {
-		parent_id_int = 0
+		parentIdInt = 0
 	}
 
 	post := &Post{
 		Content:     template.HTML(content),
-		PublishedAt: published_at,
-		ParentID:    parent_id_int,
+		PublishedAt: publishedAt,
+		ParentID:    parentIdInt,
 	}
 
 	err = dbCreatePost(post)

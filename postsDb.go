@@ -1,7 +1,9 @@
 package main
 
-func dbCheckForId(id int) (bool) {
-	var id_c int
+import "fmt"
+
+func dbCheckForId(id int) bool {
+	var idC int
 
 	query, err := db.Prepare("select id from posts where id = ?")
 	if err != nil {
@@ -10,7 +12,26 @@ func dbCheckForId(id int) (bool) {
 
 	result := query.QueryRow(id)
 
-	return result.Scan(&id_c) == nil 
+	return result.Scan(&idC) == nil
+}
+
+func dbGetLastId() (int, error) {
+	var data int
+	query, err := db.Prepare("select id from posts order by id desc limit 1")
+
+	if err != nil {
+		return 0, err
+	}
+
+	res := query.QueryRow()
+	err = res.Scan(&data)
+	
+	if err != nil {
+		fmt.Println(data, err)
+		return 0, err
+	}
+
+	return data, nil
 }
 
 func dbGetAllPosts() ([]*Post, error) {
@@ -72,7 +93,7 @@ func dbGetAllPosts() ([]*Post, error) {
 	}
 
 
-	defer query.Close()
+	catch(query.Close())
 	return posts, nil
 }
 
@@ -118,7 +139,7 @@ func dbGetPost(postID string) (*Post, error) {
 
 	data.ChildrenIDs = childs
 
-	defer query.Close()
+	catch(query.Close())
 	return data, nil
 }
 
@@ -133,7 +154,7 @@ func dbCreatePost(post *Post) error {
 		return err
 	}
 
-	defer query.Close()
+	catch(query.Close())
 	return nil
 }
 
@@ -148,6 +169,6 @@ func dbDeletePost(id int) error {
 		return err
 	}
 
-	defer query.Close()
+	catch(query.Close())
 	return nil
 }

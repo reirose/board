@@ -1,14 +1,14 @@
 package main
 
 import (
-	"fmt"
 	"context"
-	"net/http"
 	"database/sql"
+	"fmt"
+	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	_ "github.com/mattn/go-sqlite3"
 	"github.com/go-chi/chi/v5/middleware"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 var router *chi.Mux
@@ -110,9 +110,14 @@ func main() {
 		})
 	})
 
+	// API
+	router.Route("/api", func(r chi.Router) {
+		r.Get("/", APIAnswer)
+	})
+
 	fileServer := http.FileServer(http.Dir("./assets/"))
 	router.Handle("/assets/*", http.StripPrefix("/assets/", fileServer))
 
 	fmt.Println("Listening and serving @ localhost:3000")
-	http.ListenAndServe(":3000", router)
+	catch(http.ListenAndServe(":3000", router))
 }

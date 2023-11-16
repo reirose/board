@@ -7,8 +7,8 @@ import (
 type Post struct {
 	ID 			 int 		      `json:"id"`
 	Content 	 template.HTML    `json:"content"`
-	ReplyTo		 string			  `json:"reply_to"`
-	ParentID 	 int 	     	  `json:"parent_id"`
+	ReplyTo		 string			  `json:"-"`
+	ParentID 	 int 	     	  `json:"-"`
 	PublishedAt  string 		  `json:"published_at"`
 	ChildrenIDs	 []int		  	  `json:"children_ids"`
 }
@@ -31,6 +31,7 @@ type PreRegUser struct {
 
 type APIResponse struct {
 	Version string `json:"version"`
-	Users 	[]User `json:"users"`
-	Posts   []Post `json:"posts"`
+	Users 	[]*User `json:"users"`
+	Posts   []*Post `json:"posts"`
+	JSON    []byte `json:"-"`
 }

@@ -7,15 +7,15 @@ import (
 )
 
 func dbEncodeString(s string) (*string, error) {
-	enc_md5 := md5.New()
+	encMd5 := md5.New()
 	
-	if _, err := io.WriteString(enc_md5, s); err != nil {
+	if _, err := io.WriteString(encMd5, s); err != nil {
 		return nil, err
 	}
 
-	enc_string := fmt.Sprintf("%x", enc_md5.Sum(nil))
+	encString := fmt.Sprintf("%x", encMd5.Sum(nil))
 
-	return &enc_string, nil
+	return &encString, nil
 }
 
 // func dbCheckEq(enc_s1 string, s2 string) (bool, error) {
@@ -70,7 +70,7 @@ func dbGetUser(UserID string) (*User, error) {
 		return nil, err
 	}
 
-	defer q.Close()
+	catch(q.Close())
 	return data, nil
 }
 
@@ -84,7 +84,7 @@ func dbRegisterUser(user *User) error {
 		return err
 	}
 
-	defer q.Close()
+	catch(q.Close())
 	return nil
 }
 
@@ -98,6 +98,6 @@ func dbRemoveUser(id int) error {
 		return nil
 	}
 	
-	defer q.Close()
+	catch(q.Close())
 	return nil
 }
