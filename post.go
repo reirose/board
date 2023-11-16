@@ -28,12 +28,11 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 
 func NewPost(w http.ResponseWriter, r *http.Request) {
 	log(r)
-	reply_to, err := getParam(w, r.URL.String(), "reply_to")
-	catch(err)
+	reply_to := getParam(r.URL.String(), "reply_to")
 	reply := &Reply{ReplyTo: reply_to,}
 
 	t, _ := template.ParseFiles("templates/base.html", "templates/create.html")
-	err = t.Execute(w, reply)
+	err := t.Execute(w, reply)
 	catch(err)
 }
 

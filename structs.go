@@ -28,3 +28,9 @@ type PreRegUser struct {
 	Role   string `json:"role"`
 	UserID string `json:"user_id"`
 }
+
+type APIResponse struct {
+	Version string `json:"version"`
+	Users 	[]User `json:"users"`
+	Posts   []Post `json:"posts"`
+}

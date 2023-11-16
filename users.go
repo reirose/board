@@ -22,10 +22,7 @@ func RegUser(w http.ResponseWriter, r *http.Request) {
 	var err error
 	preReg := new(PreRegUser)
 	preReg.UserID = uuid.New().String()
-	preReg.Role, err = getParam(w, r.URL.String(), "role")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
+	preReg.Role = getParam(r.URL.String(), "role")
 
 	t, _ := template.ParseFiles("templates/base.html", "templates/register.html")
 	err = t.Execute(w, preReg)
