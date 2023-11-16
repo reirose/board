@@ -27,8 +27,6 @@ func RegUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
-	fmt.Println(preReg.UserID, preReg.Role)
-
 	t, _ := template.ParseFiles("templates/base.html", "templates/register.html")
 	err = t.Execute(w, preReg)
 	catch(err)
@@ -39,9 +37,11 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(r.Form)
 	user_id := r.FormValue("user_id")
 	password, err := dbEncodeString(r.FormValue("password"))
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+
 	role := r.FormValue("role")
 
 	fmt.Println(user_id, *password, role)
@@ -52,9 +52,7 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 		Role: role,
 	}
 
-
-	err = dbRegisterUser(user)
-	catch(err)
+	catch(dbRegisterUser(user))
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 

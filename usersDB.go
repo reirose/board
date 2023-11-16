@@ -8,8 +8,8 @@ import (
 
 func dbEncodeString(s string) (*string, error) {
 	enc_md5 := md5.New()
-	_, err := io.WriteString(enc_md5, s)
-	if err != nil {
+	
+	if _, err := io.WriteString(enc_md5, s); err != nil {
 		return nil, err
 	}
 
@@ -80,8 +80,7 @@ func dbRegisterUser(user *User) error {
 		return err
 	}
 
-	_, err = q.Exec(user.UserID, user.Password, user.Role)
-	if err != nil {
+	if _, err = q.Exec(user.UserID, user.Password, user.Role); err != nil {
 		return err
 	}
 
@@ -95,8 +94,7 @@ func dbRemoveUser(id int) error {
 		return nil
 	}
 
-	_, err = q.Exec(id)
-	if err != nil {
+	if _, err = q.Exec(id); err != nil {
 		return nil
 	}
 	

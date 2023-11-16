@@ -114,6 +114,5 @@ func main() {
 	router.Handle("/assets/*", http.StripPrefix("/assets/", fileServer))
 
 	fmt.Println("Listening and serving @ localhost:3000")
-	err = http.ListenAndServe(":3000", router)
-	catch(err)
+	http.ListenAndServe(":3000", router)
 }

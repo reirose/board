@@ -19,7 +19,6 @@ func getParam(w http.ResponseWriter, r_url string, req_param string) (string, er
 		return "", err
 	}
 	
-	params := u.Query()
-	res := params.Get(req_param)
-	return res, err
+	res := u.Query().Get(req_param)
+	return res, nil
 }

@@ -22,4 +22,6 @@ go.work
 
 # Database files
 *.db
-database.db
+
+# Project files
+/.vscode
