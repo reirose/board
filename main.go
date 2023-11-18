@@ -2,8 +2,11 @@ package main
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
+	"github.com/reirose/board/api"
+	postlib "github.com/reirose/board/post"
+	"github.com/reirose/board/src"
+	userlib "github.com/reirose/board/user"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -11,20 +14,10 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-var router *chi.Mux
-var db *sql.DB
-
-func catch(err error) {
-	if err != nil {
-		fmt.Println(err)
-		panic(err)
-	}
-}
-
 func PostCtx(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		postID := chi.URLParam(r, "postID")
-		post, err := dbGetPost(postID)
+		post, err := postlib.DbGetPost(postID)
 		if err != nil {
 			fmt.Println(err)
 			http.Error(w, http.StatusText(404), 404)
@@ -38,7 +31,7 @@ func PostCtx(next http.Handler) http.Handler {
 func UserCtx(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		userID := chi.URLParam(r, "userID")
-		user, err := dbGetUser(userID)
+		user, err := userlib.DbGetUser(userID)
 		if err != nil {
 			fmt.Println(err)
 			http.Error(w, http.StatusText(404), 404)
@@ -67,57 +60,59 @@ func ChangeMethod(next http.Handler) http.Handler {
 }
 
 func main() {
-	router = chi.NewRouter()
-	router.Use(middleware.Recoverer)
+	src.Router = chi.NewRouter()
+	src.Router.Use(middleware.Recoverer)
 
 	var err error
-	db, err = connect()
-	catch(err)
+	src.Database, err = connect()
+	src.Catch(err)
 
-	router.Use(ChangeMethod)
+	src.Router.Use(ChangeMethod)
 
 	// index methods
-	router.Get("/", GetAllPosts)
+	src.Router.Get("/", postlib.GetAllPosts)
 
 	// /create/ methods
-	router.Route("/create", func(r chi.Router) {
-		r.Get("/", NewPost)
-		r.Post("/", CreatePost)
+	src.Router.Route("/create", func(r chi.Router) {
+		r.Get("/", postlib.NewPost)
+		r.Post("/", postlib.CreatePost)
 	})
 
 	// /post/ methods
-	router.Route("/post", func(r chi.Router) {
-		r.Get("/", ErrorNotFound)
+	src.Router.Route("/post", func(r chi.Router) {
+		r.Get("/", postlib.ErrorNotFound)
 		r.Route("/{postID}", func(r chi.Router) {
 			r.Use(PostCtx)
-			r.Get("/", GetPost)
-			r.Delete("/", DeletePost)
-			r.Get("/delete", DeletePost)
+			r.Get("/", postlib.GetPost)
+			r.Delete("/", postlib.DeletePost)
+			r.Get("/delete", postlib.DeletePost)
 		})
 	})
 
 	// /user/ methods
-	router.Route("/user", func(r chi.Router) {
-		r.Get("/", ErrorNotFound)
+	src.Router.Route("/user", func(r chi.Router) {
+		r.Get("/", postlib.ErrorNotFound)
 		r.Route("/{userID}", func(r chi.Router) {
 			r.Use(UserCtx)
-			r.Get("/", GetUser)
-			r.Get("/remove", RemoveUser)
+			r.Get("/", userlib.GetUser)
+			r.Get("/revoke", userlib.Revoke)
+			r.Get("/remove", userlib.RemoveUser)
 		})
 		r.Route("/reg", func(r chi.Router) {
-			r.Get("/", RegUser)
-			r.Post("/", AddUser)
+			r.Get("/", userlib.RegUser)
+			r.Post("/", userlib.AddUser)
 		})
 	})
 
 	// API
-	router.Route("/api", func(r chi.Router) {
-		r.Get("/", APIAnswer)
+	src.Router.Route("/api", func(r chi.Router) {
+		r.Get("/get-info", api.GetInfo)
+		r.Get("/get-cookies", api.GetInfo)
 	})
 
 	fileServer := http.FileServer(http.Dir("./assets/"))
-	router.Handle("/assets/*", http.StripPrefix("/assets/", fileServer))
+	src.Router.Handle("/assets/*", http.StripPrefix("/assets/", fileServer))
 
 	fmt.Println("Listening and serving @ localhost:3000")
-	catch(http.ListenAndServe(":3000", router))
+	src.Catch(http.ListenAndServe(":3000", src.Router))
 }

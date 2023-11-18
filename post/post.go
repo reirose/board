@@ -1,6 +1,7 @@
-package main
+package post
 
 import (
+	"github.com/reirose/board/src"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -8,18 +9,18 @@ import (
 )
 
 func GetAllPosts(w http.ResponseWriter, r *http.Request) {
-	log(r)
-	posts, err := dbGetAllPosts()
-	catch(err)
+	src.Log(r)
+	posts, err := DbGetAllPosts()
+	src.Catch(err)
 
 	t, _ := template.ParseFiles("templates/base.html", "templates/index.html")
 	err = t.Execute(w, posts)
-	catch(err)
+	src.Catch(err)
 }
 
 func GetPost(w http.ResponseWriter, r *http.Request) {
-	log(r)
-	post := r.Context().Value("post").(*Post)
+	src.Log(r)
+	post := r.Context().Value("post").(*src.Post)
 
 	t, _ := template.ParseFiles("templates/base.html", "templates/post.html")
 	err := t.Execute(w, post)
@@ -30,17 +31,17 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 }
 
 func NewPost(w http.ResponseWriter, r *http.Request) {
-	log(r)
-	replyTo := getParam(r.URL.String(), "reply_to")
-	reply := &Reply{ReplyTo: replyTo}
+	src.Log(r)
+	replyTo := src.GetParam(r.URL.String(), "reply_to")
+	reply := &src.Reply{ReplyTo: replyTo}
 
 	t, _ := template.ParseFiles("templates/base.html", "templates/create.html")
 	err := t.Execute(w, reply)
-	catch(err)
+	src.Catch(err)
 }
 
 func CreatePost(w http.ResponseWriter, r *http.Request) {
-	log(r)
+	src.Log(r)
 	t := time.Now()
 	content := r.FormValue("content")
 	publishedAt := t.UTC().String()
@@ -51,30 +52,30 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		parentIdInt = 0
 	}
 
-	post := &Post{
+	post := &src.Post{
 		Content:     template.HTML(content),
 		PublishedAt: publishedAt,
 		ParentID:    parentIdInt,
 	}
 
-	err = dbCreatePost(post)
-	catch(err)
+	err = DbCreatePost(post)
+	src.Catch(err)
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
 func ErrorNotFound(w http.ResponseWriter, r *http.Request) {
-	log(r)
+	src.Log(r)
 
 	t, _ := template.ParseFiles("templates/base.html", "templates/notfound.html")
 	err := t.Execute(w, nil)
-	catch(err)
+	src.Catch(err)
 }
 
 func DeletePost(w http.ResponseWriter, r *http.Request) {
-	log(r)
-	post := r.Context().Value("post").(*Post)
-	err := dbDeletePost(post.ID)
-	catch(err)
+	src.Log(r)
+	post := r.Context().Value("post").(*src.Post)
+	err := DbDeletePost(post.ID)
+	src.Catch(err)
 
 	http.Redirect(w, r, "/", http.StatusFound)
 }

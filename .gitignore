@@ -25,3 +25,7 @@ database.db
 
 # Project files
 /.vscode
+/.idea
+
+# GoLand files
+identifier.sqlite

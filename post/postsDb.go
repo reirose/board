@@ -1,11 +1,14 @@
-package main
+package post
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/reirose/board/src"
+)
 
-func dbCheckForId(id int) bool {
+func DbCheckForId(id int) bool {
 	var idC int
 
-	query, err := db.Prepare("select id from posts where id = ?")
+	query, err := src.Database.Prepare("select id from posts where id = ?")
 	if err != nil {
 		return false
 	}
@@ -15,9 +18,9 @@ func dbCheckForId(id int) bool {
 	return result.Scan(&idC) == nil
 }
 
-func dbGetLastId() (int, error) {
+func DbGetLastId() (int, error) {
 	var data int
-	query, err := db.Prepare("select id from posts order by id desc limit 1")
+	query, err := src.Database.Prepare("select id from posts order by id desc limit 1")
 
 	if err != nil {
 		return 0, err
@@ -25,7 +28,7 @@ func dbGetLastId() (int, error) {
 
 	res := query.QueryRow()
 	err = res.Scan(&data)
-	
+
 	if err != nil {
 		fmt.Println(data, err)
 		return 0, err
@@ -34,8 +37,8 @@ func dbGetLastId() (int, error) {
 	return data, nil
 }
 
-func dbGetAllPosts() ([]*Post, error) {
-	query, err := db.Prepare("select id, content, published_at, parent_id from posts limit 100")
+func DbGetAllPosts() ([]*src.Post, error) {
+	query, err := src.Database.Prepare("select id, content, published_at, parent_id from posts limit 100")
 
 	if err != nil {
 		return nil, err
@@ -46,10 +49,10 @@ func dbGetAllPosts() ([]*Post, error) {
 		return nil, err
 	}
 
-	posts := make([]*Post, 0)
+	posts := make([]*src.Post, 0)
 
 	for result.Next() {
-		data := new(Post)
+		data := new(src.Post)
 		err := result.Scan(
 			&data.ID,
 			&data.Content,
@@ -59,14 +62,14 @@ func dbGetAllPosts() ([]*Post, error) {
 		if err != nil {
 			return nil, err
 		}
-		
+
 		childs := make([]int, 0)
-		
-		query, err = db.Prepare("select id from posts where parent_id = ?")
+
+		query, err = src.Database.Prepare("select id from posts where parent_id = ?")
 		if err != nil {
 			return nil, err
 		}
-		
+
 		res, err := query.Query(data.ID)
 		if err != nil {
 			return nil, err
@@ -74,50 +77,49 @@ func dbGetAllPosts() ([]*Post, error) {
 
 		for res.Next() {
 			dat := new(int)
-		
+
 			err = res.Scan(&dat)
 			if err != nil {
 				return nil, err
 			}
-		
+
 			childs = append(childs, *dat)
 		}
-		
+
 		data.ChildrenIDs = childs
 
-		if !dbCheckForId(data.ParentID) {
+		if !DbCheckForId(data.ParentID) {
 			data.ParentID = 0
 		}
-		
+
 		posts = append(posts, data)
 	}
 
-
-	catch(query.Close())
+	src.Catch(query.Close())
 	return posts, nil
 }
 
-func dbGetPost(postID string) (*Post, error) {
-	query, err := db.Prepare("select id, content, published_at, parent_id from posts where id = ?")
+func DbGetPost(postID string) (*src.Post, error) {
+	query, err := src.Database.Prepare("select id, content, published_at, parent_id from posts where id = ?")
 	if err != nil {
 		return nil, err
 	}
 
 	result := query.QueryRow(postID)
 
-	data := new(Post)
+	data := new(src.Post)
 	err = result.Scan(&data.ID, &data.Content, &data.PublishedAt, &data.ParentID)
 	if err != nil {
 		return nil, err
 	}
 
-	if !dbCheckForId(data.ParentID) {
+	if !DbCheckForId(data.ParentID) {
 		data.ParentID = 0
 	}
 
 	childs := make([]int, 0)
 
-	query, err = db.Prepare("select id from posts where parent_id = ?")
+	query, err = src.Database.Prepare("select id from posts where parent_id = ?")
 	if err != nil {
 		return nil, err
 	}
@@ -139,36 +141,36 @@ func dbGetPost(postID string) (*Post, error) {
 
 	data.ChildrenIDs = childs
 
-	catch(query.Close())
+	src.Catch(query.Close())
 	return data, nil
 }
 
-func dbCreatePost(post *Post) error {
-	query, err := db.Prepare("insert or replace into posts(content, published_at, parent_id) values (?,?,?)")
+func DbCreatePost(post *src.Post) error {
+	query, err := src.Database.Prepare("insert or replace into posts(content, published_at, parent_id) values (?,?,?)")
 	if err != nil {
 		return err
 	}
 
-	_, err = query.Exec(post.Content, post.PublishedAt, post.ParentID)
-	if err != nil {
+	//_, err = query.Exec(post.Content, post.PublishedAt, post.ParentID)
+	if _, err = query.Exec(post.Content, post.PublishedAt, post.ParentID); err != nil {
 		return err
 	}
 
-	catch(query.Close())
+	src.Catch(query.Close())
 	return nil
 }
 
-func dbDeletePost(id int) error {
-	query, err := db.Prepare("delete from posts where id=?")
+func DbDeletePost(id int) error {
+	query, err := src.Database.Prepare("delete from posts where id=?")
 	if err != nil {
 		return err
 	}
 
-	_, err = query.Exec(id)
-	if err != nil {
+	// _, err = query.Exec(id)
+	if _, err = query.Exec(id); err != nil {
 		return err
 	}
 
-	catch(query.Close())
+	src.Catch(query.Close())
 	return nil
 }
