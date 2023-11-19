@@ -10,6 +10,7 @@ func generateRandomToken(len int) (string, error) {
 	if len <= 0 {
 		return "", errors.New("token generation error: insufficient length")
 	}
+
 	if len > 32 {
 		len = 32
 	}

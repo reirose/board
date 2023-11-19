@@ -1,7 +1,6 @@
 package user
 
 import (
-	"fmt"
 	"github.com/reirose/board/src"
 	"html/template"
 	"net/http"
@@ -36,7 +35,6 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	password, err := DbEncodeString(r.FormValue("password"))
 	unhashedToken := src.GenerateToken(userId)
 	token, err := DbEncodeString(unhashedToken)
-	fmt.Printf("unhashed toke: %s\nhashed token: %s\n", unhashedToken, *token)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

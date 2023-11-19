@@ -151,7 +151,6 @@ func DbCreatePost(post *src.Post) error {
 		return err
 	}
 
-	//_, err = query.Exec(post.Content, post.PublishedAt, post.ParentID)
 	if _, err = query.Exec(post.Content, post.PublishedAt, post.ParentID); err != nil {
 		return err
 	}
@@ -166,7 +165,6 @@ func DbDeletePost(id int) error {
 		return err
 	}
 
-	// _, err = query.Exec(id)
 	if _, err = query.Exec(id); err != nil {
 		return err
 	}

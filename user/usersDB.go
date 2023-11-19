@@ -16,17 +16,14 @@ func DbEncodeString(s string) (*string, error) {
 	return &encString, nil
 }
 
-// func dbCheckEq(enc_s1 string, s2 string) (bool, error) {
-// 	enc_s2 := md5.New()
-// 	_, err := io.WriteString(enc_s2, s2)
-// 	if err != nil {
-// 		return false, err
-// 	}
-
-// 	encoded_s2 := fmt.Sprintf("%x", enc_s2.Sum(nil))
-
-// 	return encoded_s2 == enc_s1, nil
-// }
+//func dbCheckEq(inputString string, dbPassword string) (bool, error) {
+//	encodedInputString := sha256.New()
+//	encodedInputString.Write([]byte(inputString))
+//
+//	inputString = fmt.Sprintf("%x", encodedInputString.Sum(nil))
+//
+//	return inputString == dbPassword, nil
+//}
 
 func DbGetUser(UserID string) (*src.User, error) {
 	q, err := src.Database.Prepare("select id, user_id, password, role, token from users where id = ?")

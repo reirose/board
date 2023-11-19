@@ -31,16 +31,3 @@ func Catch(err error) {
 		panic(err)
 	}
 }
-
-//func CheckCookie(r *http.Request, token string) (bool, error) {
-//	c, err := r.Cookie("token")
-//	if err != nil {
-//		return false, err
-//	}
-//
-//	if c.Value != token {
-//		return false, nil
-//	}
-//
-//	return true, nil
-//}
