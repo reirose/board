@@ -1,9 +1,9 @@
 package user
 
 import (
+	"board/src"
 	"crypto/sha256"
 	"fmt"
-	"github.com/reirose/board/src"
 )
 
 func DbEncodeString(s string) (*string, error) {
@@ -16,17 +16,17 @@ func DbEncodeString(s string) (*string, error) {
 	return &encString, nil
 }
 
-//func dbCheckEq(inputString string, dbPassword string) (bool, error) {
-//	encodedInputString := sha256.New()
-//	encodedInputString.Write([]byte(inputString))
-//
-//	inputString = fmt.Sprintf("%x", encodedInputString.Sum(nil))
-//
-//	return inputString == dbPassword, nil
-//}
+func DbCheckEq(inputString string, dbPassword string) bool {
+	encodedInputString := sha256.New()
+	encodedInputString.Write([]byte(inputString))
+
+	inputString = fmt.Sprintf("%x", encodedInputString.Sum(nil))
+
+	return inputString == dbPassword
+}
 
 func DbGetUser(UserID string) (*src.User, error) {
-	q, err := src.Database.Prepare("select id, user_id, password, role, token from users where id = ?")
+	q, err := src.Database.Prepare("select id, user_id, password, role, token from users where user_id = ?")
 	if err != nil {
 		return nil, err
 	}

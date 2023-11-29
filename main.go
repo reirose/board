@@ -1,12 +1,12 @@
 package main
 
 import (
+	"board/api"
+	postlib "board/post"
+	"board/src"
+	userlib "board/user"
 	"context"
 	"fmt"
-	"github.com/reirose/board/api"
-	postlib "github.com/reirose/board/post"
-	"github.com/reirose/board/src"
-	userlib "github.com/reirose/board/user"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -102,6 +102,11 @@ func main() {
 			r.Get("/", userlib.RegUser)
 			r.Post("/", userlib.AddUser)
 		})
+	})
+
+	src.Router.Route("/login", func(r chi.Router) {
+		r.Get("/", userlib.LoginPage)
+		r.Post("/", userlib.LoginUser)
 	})
 
 	// API

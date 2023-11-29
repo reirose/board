@@ -1,7 +1,7 @@
 package post
 
 import (
-	"github.com/reirose/board/src"
+	"board/src"
 	"html/template"
 	"net/http"
 	"strconv"

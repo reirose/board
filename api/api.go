@@ -1,10 +1,10 @@
 package api
 
 import (
+	postlib "board/post"
+	"board/src"
+	userlib "board/user"
 	"encoding/json"
-	postlib "github.com/reirose/board/post"
-	"github.com/reirose/board/src"
-	userlib "github.com/reirose/board/user"
 	"net/http"
 	"net/url"
 	"strconv"

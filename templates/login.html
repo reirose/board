@@ -1,0 +1,18 @@
+{{define "title"}}login{{end}}
+{{define "scripts"}}{{end}}
+{{define "body"}}
+<form method="post" action="login">
+    <input type="text" placeholder="user_id" name="user_id"/><br>
+    <input type="password" placeholder="password" name="password"/><br>
+
+    {{if eq . "true"}}
+    <p style="color: #F00; font: 14px monospace">Wrong username/password!</p>
+    {{else if eq . "false"}}
+    <p style="color: #0A7; font: 14px monospace">Successful!</p>
+    {{else if eq . ""}}
+    <p></p>
+    {{end}}
+
+    <button id="submit" type="submit" style="align-self: center;">login</button>
+</form>
+{{end}}

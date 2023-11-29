@@ -1,8 +1,8 @@
 package post
 
 import (
+	"board/src"
 	"fmt"
-	"github.com/reirose/board/src"
 )
 
 func DbCheckForId(id int) bool {
