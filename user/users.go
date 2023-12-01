@@ -1,6 +1,7 @@
 package user
 
 import (
+	"board/post"
 	"board/src"
 	"fmt"
 	"html/template"
@@ -32,9 +33,15 @@ func RegUser(w http.ResponseWriter, r *http.Request) {
 
 func LoginPage(w http.ResponseWriter, r *http.Request) {
 	src.Log(r)
+
+	dbUser, err := DbGetUserByCookie(r.Cookies())
+	if dbUser != nil {
+		post.GetAllPosts(w, r)
+		return
+	}
+
 	t, _ := template.ParseFiles("templates/base.html", "templates/login.html")
-	fmt.Println(r.Cookies())
-	err := t.Execute(w, "")
+	err = t.Execute(w, "")
 	src.Catch(err)
 }
 
@@ -42,8 +49,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	src.Log(r)
 	userId := r.FormValue("user_id")
 
-	password, err := DbEncodeString(r.FormValue("password"))
-	src.Catch(err)
+	password := DbEncodeString(r.FormValue("password"))
 
 	user, err := DbGetUser(userId)
 
@@ -54,8 +60,10 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Set-Cookie", fmt.Sprintf("%s=%s; samesite=None; max-age=%d", "foo", "bar",
-		3600*24*15))
+	w.Header().Set("Set-Cookie", fmt.Sprintf("user-token=%s; samesite=None; max-age=%d; secure=true",
+		user.Token, 3600*24*15))
+
+	//w.WriteHeader(http.StatusOK)
 
 	t, _ := template.ParseFiles("templates/base.html", "templates/login.html")
 	err = t.Execute(w, "false")
@@ -65,13 +73,9 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 func AddUser(w http.ResponseWriter, r *http.Request) {
 	src.Log(r)
 	userId := r.FormValue("user_id")
-	password, err := DbEncodeString(r.FormValue("password"))
+	password := DbEncodeString(r.FormValue("password"))
 	unhashedToken := src.GenerateToken(userId)
-	token, err := DbEncodeString(unhashedToken)
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
+	token := DbEncodeString(unhashedToken)
 
 	role := r.FormValue("role")
 
@@ -99,6 +103,8 @@ func Revoke(w http.ResponseWriter, r *http.Request) {
 	src.Log(r)
 	user := r.Context().Value("user").(*src.User)
 	user.Token = src.GenerateToken(user.UserID)
+	user.Token = *DbEncodeString(user.Token)
+	fmt.Println(user.Token)
 
 	err := DbRevokeUser(user)
 	src.Catch(err)

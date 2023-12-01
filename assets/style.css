@@ -1,17 +1,24 @@
-a {
-    font: 16px monospace;
+body {
+    background-color: #0c0044;
+    color: #CCCCCC;
 }
 
-a.reply_link {
-    font: 14px monospace;
+a {
+    font: 16px monospace;
+    color: #FF004C
+}
+
+.reply_link {
+    font: 16px monospace;
     font-weight: bold;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
+    font-style: italic;
 }
 
 a.post-link {
     font: 16px monospace;
     font-weight: bold;
-    margin-bottom: 0px;
+    margin-bottom: 2px;
     margin-top: 5px;
 }
 
@@ -25,13 +32,35 @@ div.code_204 {
     margin-top: 15px;
 }
 
+div.post {
+    background-color: #00174C;
+    padding: 5px 10px 5px 10px;
+}
+
 div.index-post {
+    margin-top: 10px;
+    margin-bottom: 10px;
     font: 16px monospace;
+    border-left: solid #FFF;
+    border-width: 5px;
+    border-spacing: 5px;
 }
 
 span.post_contents {
     font: 16px monospace;
-    margin-top: 0px
+    margin-top: 0;
+}
+
+div.post-reply {
+    margin-top: 10px;
+    padding-left: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font: 16px monospace;
+    border-left: solid #FFF;
+    border-width: 5px;
+    border-spacing: 5px;
+    background-color: #003773;
 }
 
 div.user-info {
@@ -58,18 +87,18 @@ header {
 
 p {
     font: 16px monospace;
-    margin-top: 0px;
-    margin-bottom: 0px;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 p.post_id {
     font-weight: bold;
     margin-top: 5px;
-    margin-bottom: 0px;
+    margin-bottom: 0;
 }
 
 p.post_contents {
-    margin-top: 0px;
+    margin-top: 0;
     margin-bottom: 10px;
 }
 

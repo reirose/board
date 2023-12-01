@@ -2,6 +2,7 @@ package post
 
 import (
 	"board/src"
+	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -12,6 +13,11 @@ func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 	src.Log(r)
 	posts, err := DbGetAllPosts()
 	src.Catch(err)
+
+	if err != nil {
+		http.Redirect(w, r, "/", 200)
+		return
+	}
 
 	t, _ := template.ParseFiles("templates/base.html", "templates/index.html")
 	err = t.Execute(w, posts)
@@ -45,6 +51,7 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 	t := time.Now()
 	content := r.FormValue("content")
 	publishedAt := t.UTC().String()
+	fmt.Println(publishedAt)
 	parentId := r.FormValue("parent_id")
 
 	parentIdInt, err := strconv.Atoi(parentId)

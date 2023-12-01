@@ -3,6 +3,7 @@ package post
 import (
 	"board/src"
 	"fmt"
+	"strconv"
 )
 
 func DbCheckForId(id int) bool {
@@ -63,7 +64,7 @@ func DbGetAllPosts() ([]*src.Post, error) {
 			return nil, err
 		}
 
-		childs := make([]int, 0)
+		childIDs := make([]int, 0)
 
 		query, err = src.Database.Prepare("select id from posts where parent_id = ?")
 		if err != nil {
@@ -83,10 +84,23 @@ func DbGetAllPosts() ([]*src.Post, error) {
 				return nil, err
 			}
 
-			childs = append(childs, *dat)
+			childIDs = append(childIDs, *dat)
 		}
 
-		data.ChildrenIDs = childs
+		data.ChildrenIDs = childIDs
+
+		for _, v := range childIDs {
+			replyPost := new(src.PostReply)
+			postIDString := strconv.Itoa(v)
+			post, err := DbGetPost(postIDString)
+			src.Catch(err)
+			replyPost.ID = post.ID
+			replyPost.Content = post.Content
+			replyPost.PublishedAt = post.PublishedAt
+			replyPost.ChildrenIDs = post.ChildrenIDs
+
+			data.Children = append(data.Children, replyPost)
+		}
 
 		if !DbCheckForId(data.ParentID) {
 			data.ParentID = 0

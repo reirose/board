@@ -3,17 +3,46 @@ package user
 import (
 	"board/src"
 	"crypto/sha256"
+	"errors"
 	"fmt"
+	"net/http"
 )
 
-func DbEncodeString(s string) (*string, error) {
+func DbGetUserByCookie(cs []*http.Cookie) (*src.User, error) {
+	q, err := src.Database.Prepare("select user_id from users where token = ?")
+	src.Catch(err)
+	var c *http.Cookie
+
+	for _, cc := range cs {
+		if cc.Name == "user-token" {
+			c = cc
+		}
+	}
+
+	if c == nil {
+		return nil, errors.New("cookie not found")
+	}
+
+	var userId string
+	res := q.QueryRow(c.Value)
+	err = res.Scan(&userId)
+
+	resUser, err := DbGetUser(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	return resUser, nil
+}
+
+func DbEncodeString(s string) *string {
 	encSha256 := sha256.New()
 
 	encSha256.Write([]byte(s))
 
 	encString := fmt.Sprintf("%x", encSha256.Sum(nil))
 
-	return &encString, nil
+	return &encString
 }
 
 func DbCheckEq(inputString string, dbPassword string) bool {
@@ -25,16 +54,26 @@ func DbCheckEq(inputString string, dbPassword string) bool {
 	return inputString == dbPassword
 }
 
-func DbGetUser(UserID string) (*src.User, error) {
+func DbGetUserById(uid int) (*src.User, error) {
+	q, err := src.Database.Prepare("select user_id from users where id = ?")
+	if err != nil {
+		return nil, err
+	}
+
+	res := q.QueryRow(uid)
+	data := new(string)
+	src.Catch(res.Scan(&data))
+	src.Catch(q.Close())
+	return DbGetUser(*data)
+}
+
+func DbGetUser(user_id string) (*src.User, error) {
 	q, err := src.Database.Prepare("select id, user_id, password, role, token from users where user_id = ?")
 	if err != nil {
 		return nil, err
 	}
 
-	res := q.QueryRow(UserID)
-	if err != nil {
-		return nil, err
-	}
+	res := q.QueryRow(user_id)
 
 	data := new(src.User)
 

@@ -5,23 +5,30 @@
 <div class="code_204">nothin' to see here</div>
 {{end}}
 {{range .}}
-<!--
+{{if not .ParentID}}
 <div class="index-post">
-    <a href="/post/{{.ID}}">#{{.ID}} @ {{.PublishedAt}}</a>
-</div>
--->
-{{if .ParentID}}
-<div class="sixteenpx_monospace">
-  [reply to <a href="/post/{{.ParentID}}">#{{.ParentID}}</a>]
+  <div class="post">
+    {{if .ParentID}}
+    <div class="reply_link" style="font-weight: normal">
+      [reply to <a href="/post/{{.ParentID}}">#{{.ParentID}}</a>]
+    </div>
+    {{end}}
+    <a class="post-link" href="/post/{{.ID}}">#{{.ID}}</a> <abbr style="color: #666;">{{.PublishedAt}}</abbr>
+    <span class="post_contents">{{.Content}}</span>
+    {{range .Children}}
+    <div class="post-reply">
+      <a class="post-link" href="/post/{{.ID}}">#{{.ID}}</a> <abbr style="color: #666;">{{.PublishedAt}}</abbr>
+      <span class="post-contents">{{.Content}}</span>
+      {{range .ChildrenIDs}}
+      <a class="reply_link" href="/post/{{.}}">>> #{{.}}</a>
+      {{end}}
+    </div>
+    {{end}}
+<!--    {{range .ChildrenIDs}}-->
+<!--    <a class="reply_link" href="/post/{{.}}">>> #{{.}}</a>-->
+<!--    {{end}}-->
+  </div>
 </div>
 {{end}}
-<div class="post">
-  <a class="post-link" href="/post/{{.ID}}">#{{.ID}}</a>
-  <span class="post_contents">{{.Content}}</span>
-</div>
-{{range .ChildrenIDs}}
-<a class="reply_link" href="/post/{{.}}">>> #{{.}}</a>
-{{end}}
-<hr>
 {{end}}
 {{end}}

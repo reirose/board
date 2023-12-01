@@ -8,6 +8,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -30,8 +31,8 @@ func PostCtx(next http.Handler) http.Handler {
 
 func UserCtx(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		userID := chi.URLParam(r, "userID")
-		user, err := userlib.DbGetUser(userID)
+		userID, err := strconv.Atoi(chi.URLParam(r, "userID"))
+		user, err := userlib.DbGetUserById(userID)
 		if err != nil {
 			fmt.Println(err)
 			http.Error(w, http.StatusText(404), 404)
@@ -98,10 +99,6 @@ func main() {
 			r.Get("/revoke", userlib.Revoke)
 			r.Get("/remove", userlib.RemoveUser)
 		})
-		r.Route("/reg", func(r chi.Router) {
-			r.Get("/", userlib.RegUser)
-			r.Post("/", userlib.AddUser)
-		})
 	})
 
 	src.Router.Route("/login", func(r chi.Router) {
@@ -109,10 +106,14 @@ func main() {
 		r.Post("/", userlib.LoginUser)
 	})
 
+	src.Router.Route("/register", func(r chi.Router) {
+		r.Get("/", userlib.RegUser)
+		r.Post("/", userlib.AddUser)
+	})
+
 	// API
 	src.Router.Route("/api", func(r chi.Router) {
 		r.Get("/get-info", api.GetInfo)
-		r.Get("/get-cookies", api.GetInfo)
 	})
 
 	fileServer := http.FileServer(http.Dir("./assets/"))

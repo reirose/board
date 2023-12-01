@@ -4,12 +4,12 @@
 {{define "scripts"}}{{end}}
 {{define "body"}}
 {{if .ParentID}}
-<div class="sixteenpx_monospace">
+<div class="reply_link">
   [reply to <a href="/post/{{.ParentID}}">#{{.ParentID}}</a>]
 </div>
 {{end}}
 <div class="post">
-  <p class="post_id">#{{.ID}}</p>
+  <p class="post_id">#{{.ID}} <abbr style="color: #666;">@ {{.PublishedAt}}</abbr></p>
   <span class="post_contents">{{.Content}}</span>
 </div>
 {{range .ChildrenIDs}}

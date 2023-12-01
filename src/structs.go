@@ -9,8 +9,16 @@ type Post struct {
 	Content     template.HTML `json:"content"`
 	ReplyTo     string        `json:"-"`
 	ParentID    int           `json:"-"`
+	Children    []*PostReply  `json:"-"`
 	PublishedAt string        `json:"published_at"`
 	ChildrenIDs []int         `json:"children_ids"`
+}
+
+type PostReply struct {
+	ID          int           `json:"id"`
+	Content     template.HTML `json:"content"`
+	ChildrenIDs []int         `json:"children_ids"`
+	PublishedAt string        `json:"published_at"`
 }
 
 type Reply struct {
@@ -21,7 +29,7 @@ type User struct {
 	ID       int    `json:"id"`
 	Role     string `json:"role"`
 	UserID   string `json:"user_id"`
-	Password string `json:"password"`
+	Password string `json:"-"`
 	Token    string `json:"-"`
 }
 

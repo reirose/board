@@ -25,7 +25,8 @@ func apiGetInfo(r *http.Request) (*src.APIResponse, error) {
 	userIds = parsedURL.Query()["user_id"]
 
 	for _, id := range userIds {
-		user, err := userlib.DbGetUser(id)
+		qid, err := strconv.Atoi(id)
+		user, err := userlib.DbGetUserById(qid)
 		if err != nil {
 			return nil, err
 		}
@@ -85,7 +86,6 @@ func GetInfo(w http.ResponseWriter, r *http.Request) {
 	data, err := apiGetInfo(r)
 	src.Catch(err)
 
-	n, err := w.Write(data.JSON)
-	w.WriteHeader(n)
+	_, err = w.Write(data.JSON)
 	src.Catch(err)
 }
