@@ -1,34 +1,35 @@
 body {
     background-color: #0c0044;
     color: #CCCCCC;
+    font-family: trebuchet ms,sans-serif;
+    font-size: 16px;
+}
+
+abbr {
+    font-weight: normal;
 }
 
 a {
-    font: 16px monospace;
     color: #FF004C
 }
 
 .reply_link {
-    font: 16px monospace;
     font-weight: bold;
     margin-bottom: 5px;
     font-style: italic;
 }
 
 a.post-link {
-    font: 16px monospace;
     font-weight: bold;
     margin-bottom: 2px;
     margin-top: 5px;
 }
 
 body.notfound {
-    font: 16px monospace;
     justify-content: center;
 }
 
 div.code_204 {
-    font: 16px monospace;
     margin-top: 15px;
 }
 
@@ -40,14 +41,12 @@ div.post {
 div.index-post {
     margin-top: 10px;
     margin-bottom: 10px;
-    font: 16px monospace;
     border-left: solid #FFF;
     border-width: 5px;
     border-spacing: 5px;
 }
 
 span.post_contents {
-    font: 16px monospace;
     margin-top: 0;
 }
 
@@ -56,7 +55,6 @@ div.post-reply {
     padding-left: 10px;
     padding-top: 5px;
     padding-bottom: 5px;
-    font: 16px monospace;
     border-left: solid #FFF;
     border-width: 5px;
     border-spacing: 5px;
@@ -64,7 +62,6 @@ div.post-reply {
 }
 
 div.user-info {
-    font: 16px monospace;
     margin-top: 15px;
 }
 
@@ -73,7 +70,6 @@ form.reply-button {
 }
 
 header {
-    font: 16pt monospace;
     width: 99%;
     height: 30px;
     top: 0;
@@ -86,7 +82,6 @@ header {
 }
 
 p {
-    font: 16px monospace;
     margin-top: 0;
     margin-bottom: 0;
 }

@@ -4,6 +4,18 @@ import (
 	"html/template"
 )
 
+type ClientData struct {
+	UserToken string
+}
+
+type ReqData struct {
+	UserData   *User
+	PostData   *Post
+	PostsData  []*Post
+	ClientData *ClientData
+	ReplyData  *Reply
+}
+
 type Post struct {
 	ID          int           `json:"id"`
 	Content     template.HTML `json:"content"`

@@ -1,23 +1,23 @@
 {{define "title"}}
-{{if not .ParentID}}Post #{{.ID}}{{else}}Post #{{.ID}}@#{{.ParentID}}{{end}}
+{{if not .PostData.ParentID}}Post #{{.PostData.ID}}{{else}}Post #{{.PostData.ID}}@#{{.PostData.ParentID}}{{end}}
 {{end}}
 {{define "scripts"}}{{end}}
 {{define "body"}}
-{{if .ParentID}}
+{{if .PostData.ParentID}}
 <div class="reply_link">
-  [reply to <a href="/post/{{.ParentID}}">#{{.ParentID}}</a>]
+  [reply to <a href="/post/{{.PostData.ParentID}}">#{{.ParentID}}</a>]
 </div>
 {{end}}
 <div class="post">
-  <p class="post_id">#{{.ID}} <abbr style="color: #666;">@ {{.PublishedAt}}</abbr></p>
-  <span class="post_contents">{{.Content}}</span>
+  <p class="post_id">#{{.PostData.ID}} <abbr style="color: #666;">@ {{.PostData.PublishedAt}}</abbr></p>
+  <span class="post_contents">{{.PostData.Content}}</span>
 </div>
-{{range .ChildrenIDs}}
+{{range .PostData.ChildrenIDs}}
 <a class="reply_link" href="/post/{{.}}">>> #{{.}}</a>
 {{end}}
 <div>
   <form class="reply-button" method="get" action="/create">
-    <button style="font: 14px monospace;" name="reply_to" id="submit" type="submit" value="{{.ID}}">reply</button>
+    <button style="font: 14px monospace;" name="reply_to" id="submit" type="submit" value="{{.PostData.ID}}">reply</button>
   </form>
 </div>
 {{end}}

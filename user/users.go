@@ -1,21 +1,24 @@
 package user
 
 import (
-	"board/post"
-	"board/src"
 	"fmt"
 	"html/template"
 	"net/http"
+
+	"board/post"
+	"board/src"
 
 	"github.com/google/uuid"
 )
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
 	src.Log(r)
-	user := r.Context().Value("user").(*src.User)
+
+	//user := r.Context().Value("user").(*src.User)
+	reqData := post.GetRequestDataC([]string{"user"}, r)
 
 	t, _ := template.ParseFiles("templates/base.html", "templates/user.html")
-	err := t.Execute(w, user)
+	err := t.Execute(w, reqData)
 	src.Catch(err)
 }
 
@@ -49,24 +52,22 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	src.Log(r)
 	userId := r.FormValue("user_id")
 
-	password := DbEncodeString(r.FormValue("password"))
+	password := r.FormValue("password")
 
 	user, err := DbGetUser(userId)
 
-	if (DbCheckEq(*password, user.Password)) || (err != nil) {
+	if user != nil && DbCheckEq(password, user.Password) {
 		t, _ := template.ParseFiles("templates/base.html", "templates/login.html")
-		err := t.Execute(w, "true")
+		header := fmt.Sprintf("token=%s; samesite=None; max-age=%d; secure=true", user.Token, 3600*24*15)
+		fmt.Println(header)
+		w.Header().Set("Set-Cookie", header)
+		err := t.Execute(w, "false")
 		src.Catch(err)
 		return
 	}
 
-	w.Header().Set("Set-Cookie", fmt.Sprintf("user-token=%s; samesite=None; max-age=%d; secure=true",
-		user.Token, 3600*24*15))
-
-	//w.WriteHeader(http.StatusOK)
-
 	t, _ := template.ParseFiles("templates/base.html", "templates/login.html")
-	err = t.Execute(w, "false")
+	err = t.Execute(w, "true")
 	src.Catch(err)
 }
 

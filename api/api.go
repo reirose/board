@@ -80,7 +80,7 @@ func apiGetInfo(r *http.Request) (*src.APIResponse, error) {
 	return response, nil
 }
 
-func GetInfo(w http.ResponseWriter, r *http.Request) {
+func APIGetInfo(w http.ResponseWriter, r *http.Request) {
 	src.Log(r)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	data, err := apiGetInfo(r)

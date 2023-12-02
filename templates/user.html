@@ -1,10 +1,10 @@
 {{define "title"}}
-User #{{.UserID}}
+User #{{.UserData.UserID}}
 {{end}}
 {{define "scripts"}}{{end}}
 {{define "body"}}
 <div class="user-info">
-  <p class="user-id">User #{{.UserID}}</p>
-  <span class="user-role">Role: {{.Role}}</span>
+  <p class="user-id">User #{{.UserData.UserID}}</p>
+  <span class="user-role">Role: {{.UserData.Role}}</span>
 </div>
 {{end}}

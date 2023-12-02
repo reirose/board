@@ -1,14 +1,15 @@
 package main
 
 import (
-	"board/api"
-	postlib "board/post"
-	"board/src"
-	userlib "board/user"
 	"context"
 	"fmt"
 	"net/http"
 	"strconv"
+
+	"board/api"
+	postlib "board/post"
+	"board/src"
+	userlib "board/user"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -113,7 +114,7 @@ func main() {
 
 	// API
 	src.Router.Route("/api", func(r chi.Router) {
-		r.Get("/get-info", api.GetInfo)
+		r.Get("/get-info", api.APIGetInfo)
 	})
 
 	fileServer := http.FileServer(http.Dir("./assets/"))

@@ -1,10 +1,10 @@
 {{define "title"}}all posts{{end}}
 {{define "scripts"}}{{end}}
 {{define "body"}}
-{{if eq (len .) 0}}
+{{if eq (len .PostsData) 0}}
 <div class="code_204">nothin' to see here</div>
 {{end}}
-{{range .}}
+{{range .PostsData}}
 {{if not .ParentID}}
 <div class="index-post">
   <div class="post">
@@ -24,9 +24,6 @@
       {{end}}
     </div>
     {{end}}
-<!--    {{range .ChildrenIDs}}-->
-<!--    <a class="reply_link" href="/post/{{.}}">>> #{{.}}</a>-->
-<!--    {{end}}-->
   </div>
 </div>
 {{end}}
