@@ -30,9 +30,6 @@ func GetParam(rUrl string, reqParam string) string {
 	}
 
 	res := u.Query().Get(reqParam)
-	for _, i := range u.Query() {
-		fmt.Println(i)
-	}
 	return res
 }
 

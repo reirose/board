@@ -1,11 +1,12 @@
 package user
 
 import (
-	"board/src"
 	"crypto/sha256"
 	"errors"
 	"fmt"
 	"net/http"
+
+	"board/src"
 )
 
 func DbGetUserByCookie(cs []*http.Cookie) (*src.User, error) {

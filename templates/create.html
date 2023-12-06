@@ -18,10 +18,10 @@
 {{define "body"}}
 <form method="post" action="/create">
     <textarea id="mytextarea" class="mytextarea" name="content" style="align-self: center;"></textarea><br>
-    {{if ne .ReplyTo ""}}
-    <input type="text" placeholder="reply to" name="parent_id" value="{{.ReplyTo}}"/><br>
+    {{if ne .ReplyData.ReplyTo ""}}
+    <input type="text" placeholder="reply to" name="parent_id" value="{{.ReplyData.ReplyTo}}"/><br>
     {{else}}
-    <input type="text" placeholder="reply to" name="parent_id"/><br>
+    <input type="text" placeholder="reply to" class="input" name="parent_id"/><br>
     {{end}}
     <button id="submit" type="submit" style="align-self: center;">Create</button>
 </form>

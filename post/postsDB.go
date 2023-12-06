@@ -1,9 +1,10 @@
 package post
 
 import (
-	"board/src"
 	"fmt"
 	"strconv"
+
+	"board/src"
 )
 
 func DbCheckForId(id int) bool {
@@ -31,7 +32,7 @@ func DbGetLastId() (int, error) {
 	err = res.Scan(&data)
 
 	if err != nil {
-		fmt.Println(data, err)
+		fmt.Println(err)
 		return 0, err
 	}
 

@@ -102,6 +102,10 @@ func main() {
 		})
 	})
 
+	src.Router.Route("/me", func(r chi.Router) {
+		r.Get("/", userlib.GetUserByCookie)
+	})
+
 	src.Router.Route("/login", func(r chi.Router) {
 		r.Get("/", userlib.LoginPage)
 		r.Post("/", userlib.LoginUser)
@@ -121,5 +125,5 @@ func main() {
 	src.Router.Handle("/assets/*", http.StripPrefix("/assets/", fileServer))
 
 	fmt.Println("Listening and serving @ localhost:3000")
-	src.Catch(http.ListenAndServe(":3000", src.Router))
+	src.Catch(http.ListenAndServeTLS(":3000", "certificate.crt", "privatekey.key", src.Router))
 }

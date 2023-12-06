@@ -2,25 +2,25 @@
 {{define "scripts"}}{{end}}
 {{define "body"}}
 {{if eq (len .PostsData) 0}}
-<div class="code_204">nothin' to see here</div>
+<div class="code-204">nothin' to see here</div>
 {{end}}
 {{range .PostsData}}
 {{if not .ParentID}}
 <div class="index-post">
   <div class="post">
     {{if .ParentID}}
-    <div class="reply_link" style="font-weight: normal">
+    <div class="reply-link" style="font-weight: normal">
       [reply to <a href="/post/{{.ParentID}}">#{{.ParentID}}</a>]
     </div>
     {{end}}
     <a class="post-link" href="/post/{{.ID}}">#{{.ID}}</a> <abbr style="color: #666;">{{.PublishedAt}}</abbr>
-    <span class="post_contents">{{.Content}}</span>
+    <span class="post-contents">{{.Content}}</span>
     {{range .Children}}
     <div class="post-reply">
       <a class="post-link" href="/post/{{.ID}}">#{{.ID}}</a> <abbr style="color: #666;">{{.PublishedAt}}</abbr>
       <span class="post-contents">{{.Content}}</span>
       {{range .ChildrenIDs}}
-      <a class="reply_link" href="/post/{{.}}">>> #{{.}}</a>
+      <a class="reply-link" href="/post/{{.}}">>> #{{.}}</a>
       {{end}}
     </div>
     {{end}}

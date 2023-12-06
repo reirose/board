@@ -1,7 +1,6 @@
 package post
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -62,10 +61,6 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("templates/base.html", "templates/post.html")
 	err := t.Execute(w, reqData)
 	src.Catch(err)
-	//if err != nil {
-	//	fmt.Println(err.Error())
-	//	http.Redirect(w, r, "/", http.StatusBadRequest)
-	//}
 }
 
 func NewPost(w http.ResponseWriter, r *http.Request) {
@@ -82,7 +77,6 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 	t := time.Now()
 	content := r.FormValue("content")
 	publishedAt := t.UTC().String()
-	fmt.Println(publishedAt)
 	parentId := r.FormValue("parent_id")
 
 	parentIdInt, err := strconv.Atoi(parentId)

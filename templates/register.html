@@ -2,12 +2,12 @@
 {{define "scripts"}}{{end}}
 {{define "body"}}
 <form method="post" action="register">
-    <input type="text" placeholder="user_id" name="user_id" value="{{.UserID}}"/><br>
-    <input type="password" placeholder="password" name="password"/><br>
+    <input type="text" class="input" placeholder="user_id" name="user_id" value="{{.UserID}}"/><br>
+    <input type="password" class="input" placeholder="password" name="password"/><br>
     {{if eq .Role ""}}
-    <input type="text" name="role" placeholder="role" readonly="true" value="user"/><br>
+    <input type="text" class="input" name="role" placeholder="role" readonly="true" value="user"/><br>
     {{else}}
-    <input type="text" name="role" placeholder="role" readonly="true" value="{{.Role}}"/><br>
+    <input type="text" class="input" name="role" placeholder="role" readonly="true" value="{{.Role}}"/><br>
     {{end}}
     <button id="submit" type="submit" style="align-self: center;">register</button>
 </form>

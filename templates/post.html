@@ -4,16 +4,16 @@
 {{define "scripts"}}{{end}}
 {{define "body"}}
 {{if .PostData.ParentID}}
-<div class="reply_link">
-  [reply to <a href="/post/{{.PostData.ParentID}}">#{{.ParentID}}</a>]
+<div class="reply-link">
+  [reply to <a href="/post/{{.PostData.ParentID}}">#{{.PostData.ParentID}}</a>]
 </div>
 {{end}}
 <div class="post">
-  <p class="post_id">#{{.PostData.ID}} <abbr style="color: #666;">@ {{.PostData.PublishedAt}}</abbr></p>
-  <span class="post_contents">{{.PostData.Content}}</span>
+  <p class="post-id">#{{.PostData.ID}} <abbr style="color: #666;">@ {{.PostData.PublishedAt}}</abbr></p>
+  <span class="post-contents">{{.PostData.Content}}</span>
 </div>
 {{range .PostData.ChildrenIDs}}
-<a class="reply_link" href="/post/{{.}}">>> #{{.}}</a>
+<a class="reply-link" href="/post/{{.}}">>> #{{.}}</a>
 {{end}}
 <div>
   <form class="reply-button" method="get" action="/create">

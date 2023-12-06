@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"strconv"
 
 	"board/post"
 	"board/src"
@@ -59,7 +60,6 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	if user != nil && DbCheckEq(password, user.Password) {
 		t, _ := template.ParseFiles("templates/base.html", "templates/login.html")
 		header := fmt.Sprintf("token=%s; samesite=None; max-age=%d; secure=true", user.Token, 3600*24*15)
-		fmt.Println(header)
 		w.Header().Set("Set-Cookie", header)
 		err := t.Execute(w, "false")
 		src.Catch(err)
@@ -105,10 +105,43 @@ func Revoke(w http.ResponseWriter, r *http.Request) {
 	user := r.Context().Value("user").(*src.User)
 	user.Token = src.GenerateToken(user.UserID)
 	user.Token = *DbEncodeString(user.Token)
-	fmt.Println(user.Token)
 
 	err := DbRevokeUser(user)
 	src.Catch(err)
 
 	http.Redirect(w, r, "/", http.StatusOK)
+}
+
+func CheckUserCookie(c *http.Cookie, w http.ResponseWriter, r *http.Request) int {
+	res := src.Database.QueryRow("select id from users where token = ?", c.Value)
+	var ret string
+	err := res.Scan(&ret)
+	reti, err := strconv.Atoi(ret)
+	if err != nil {
+		post.ErrorNotFound(w, r)
+	}
+	return reti
+}
+
+func GetUserByCookie(w http.ResponseWriter, r *http.Request) {
+	src.Log(r)
+	cookies := r.Cookies()
+	for _, v := range cookies {
+		fmt.Println(v.Name)
+		if v.Name == "token" {
+			uid := CheckUserCookie(v, w, r)
+			fmt.Println(v.Value, CheckUserCookie(v, w, r))
+
+			user, err := DbGetUserById(uid)
+
+			reqData := new(src.ReqData)
+			reqData.UserData = user
+
+			t, _ := template.ParseFiles("templates/base.html", "templates/user.html")
+			err = t.Execute(w, reqData)
+			src.Catch(err)
+			return
+		}
+	}
+	LoginPage(w, r)
 }

@@ -1,16 +1,18 @@
 package api
 
 import (
-	postlib "board/post"
-	"board/src"
-	userlib "board/user"
 	"encoding/json"
 	"net/http"
 	"net/url"
 	"strconv"
+
+	postlib "board/post"
+	"board/src"
+	userlib "board/user"
 )
 
 func apiGetInfo(r *http.Request) (*src.APIResponse, error) {
+	src.Log(r)
 	response := new(src.APIResponse)
 	userIds := make([]string, 0)
 	userList := make([]*src.User, 0)
